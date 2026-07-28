@@ -344,7 +344,7 @@ export default function Home() {
     >
       {/* Header */}
       <header className={`shrink-0 z-40 text-white border-b transition-all duration-300 ${scrolled || tab !== "home" ? "bg-black/60 backdrop-blur-md border-white/10" : "bg-transparent border-transparent"}`}>
-        <div className="flex items-center justify-between px-4 py-3 max-w-5xl mx-auto w-full">
+        <div className="flex items-center justify-between px-4 py-2 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-3">
             {/* Hamburger - mobile only */}
             <button
@@ -506,18 +506,18 @@ export default function Home() {
       ) : (
         /* Home tab */
         <main ref={mainRef} className="flex-1 overflow-y-auto md:pb-6 pb-14">
-          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-10 pb-6 md:pt-16">
+          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-6 pb-4 md:pt-16">
             {/* Left: logo + title + CTA */}
             <div className="flex flex-col items-center md:items-start flex-1">
               {/* Logo */}
-              <img src={LOGO} alt="King Food" className="w-24 h-24 md:w-32 md:h-32 object-contain mb-4 rounded-2xl" />
+              <img src={LOGO} alt="King Food" className="w-20 h-20 md:w-32 md:h-32 object-contain mb-3 rounded-2xl" />
 
               {/* Title */}
               <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">King Food</h1>
-              <p className="text-sm md:text-base text-white/50 mb-4">Açaí Premium • Columbus, OH</p>
+              <p className="text-sm md:text-base text-white/50 mb-3">Açaí Premium • Columbus, OH</p>
 
               {/* Description */}
-              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-6 max-w-md">
+              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-5 max-w-md">
                 Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
               </p>
 
@@ -526,7 +526,7 @@ export default function Home() {
                 type="button"
                 onClick={openMenu}
                 ref={ctaPrimaryRef}
-                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
               >
                 Ver cardápio →
               </button>
@@ -537,7 +537,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 ref={ctaSecondaryRef}
-                className="w-full md:w-auto md:min-w-[220px] mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] mt-2.5 border border-white/20 text-white font-bold py-3 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
               >
                 Entrar no grupo
               </a>
@@ -547,7 +547,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setShowInstallModal(true)}
-                  className="mt-3 text-sm font-medium text-white/40 hover:text-white/70 py-2 transition"
+                  className="mt-2 text-sm font-medium text-white/40 hover:text-white/70 py-1.5 transition"
                 >
                   + Instalar app
                 </button>
@@ -630,16 +630,16 @@ export default function Home() {
           {/* Mobile-only info cards (below CTAs) */}
           <div className="md:hidden">
             {/* Google rating */}
-            <div className="w-full mt-8 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-3">Avaliações</h2>
+            <div className="w-full mt-5 text-left px-5">
+              <h2 className="text-sm font-extrabold text-white mb-2.5">Avaliações</h2>
               <a
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 active:scale-[0.98] transition"
               >
-                <div className="shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
-                  <span className="text-lg font-bold text-[#4285F4]">G</span>
+                <div className="shrink-0 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center">
+                  <span className="text-base font-bold text-[#4285F4]">G</span>
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white">Google</p>
@@ -650,8 +650,8 @@ export default function Home() {
             </div>
 
             {/* Contact links */}
-            <div className="w-full mt-6 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-3">Contato</h2>
+            <div className="w-full mt-4 text-left px-5">
+              <h2 className="text-sm font-extrabold text-white mb-2.5">Contato</h2>
               <div className="grid grid-cols-2 gap-3">
                 <a
                   href={WA_URL}
@@ -708,7 +708,7 @@ export default function Home() {
       </a>
 
       {/* Bottom nav - mobile only, fixed at bottom */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-black/80 backdrop-blur-xl border-t border-white/10 px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-black/80 backdrop-blur-xl border-t border-white/10 px-4 py-1 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-evenly max-w-md mx-auto">
           <button
             type="button"
