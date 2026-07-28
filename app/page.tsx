@@ -108,8 +108,10 @@ export default function Home() {
   const [iframeReady, setIframeReady] = useState(false);
   const [canInstall, setCanInstall] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const deferredPrompt = useRef<BeforeInstallPromptEvent | null>(null);
   const loadingDone = useRef(false);
+  const mainRef = useRef<HTMLElement>(null);
   const today = new Date().getDay();
 
   const tryShowModal = useCallback(() => {
@@ -141,6 +143,14 @@ export default function Home() {
     document.body.style.overflow = drawerOpen || showInstallModal ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [drawerOpen, showInstallModal]);
+
+  useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+    const onScroll = () => setScrolled(el.scrollTop > 80);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [tab]);
 
   useEffect(() => {
     const isStandalone =
@@ -251,7 +261,7 @@ export default function Home() {
       }}
     >
       {/* Header */}
-      <header className="shrink-0 z-40 text-white border-b border-white/10 bg-black/60 backdrop-blur-md">
+      <header className={`shrink-0 z-40 text-white border-b transition-all duration-300 ${scrolled || tab !== "home" ? "bg-black/60 backdrop-blur-md border-white/10" : "bg-transparent border-transparent"}`}>
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <button
@@ -264,7 +274,7 @@ export default function Home() {
               <span className="block w-5 h-0.5 bg-white rounded" />
               <span className="block w-5 h-0.5 bg-white rounded" />
             </button>
-            <button type="button" onClick={goHome} className="flex items-center gap-2.5 active:scale-95 transition">
+            <button type="button" onClick={goHome} className={`flex items-center gap-2.5 active:scale-95 transition-all duration-300 ${scrolled || tab !== "home" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
               <img src={LOGO} alt="King Food" className="w-8 h-8 object-contain rounded-lg" />
               <div className="leading-tight text-left">
                 <p className="font-bold text-sm tracking-tight">King Food</p>
@@ -401,7 +411,7 @@ export default function Home() {
         </main>
       ) : (
         /* Home tab */
-        <main className="flex-1 overflow-y-auto">
+        <main ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="max-w-sm mx-auto flex flex-col items-center text-center px-5 pt-10 pb-6">
             {/* Logo */}
             <img src={LOGO} alt="King Food" className="w-24 h-24 object-contain mb-4 rounded-2xl" />
