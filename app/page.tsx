@@ -506,18 +506,18 @@ export default function Home() {
       ) : (
         /* Home tab */
         <main ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-10 pb-6 md:pt-16">
+          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-4 md:pt-16 pb-2 md:pb-6">
             {/* Left: logo + title + CTA */}
             <div className="flex flex-col items-center md:items-start flex-1">
               {/* Logo */}
-              <img src={LOGO} alt="King Food" className="w-24 h-24 md:w-32 md:h-32 object-contain mb-4 rounded-2xl" />
+              <img src={LOGO} alt="King Food" className="w-20 h-20 md:w-32 md:h-32 object-contain mb-2 md:mb-4 rounded-2xl" />
 
               {/* Title */}
-              <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">King Food</h1>
-              <p className="text-sm md:text-base text-white/50 mb-4">Açaí Premium • Columbus, OH</p>
+              <h1 className="text-xl md:text-4xl font-extrabold text-white mb-0.5 md:mb-1 tracking-tight">King Food</h1>
+              <p className="text-xs md:text-base text-white/50 mb-2 md:mb-4">Açaí Premium • Columbus, OH</p>
 
               {/* Description */}
-              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-6 max-w-md">
+              <p className="text-xs md:text-base text-white/70 leading-snug md:leading-relaxed mb-4 md:mb-6 max-w-md">
                 Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
               </p>
 
@@ -526,7 +526,7 @@ export default function Home() {
                 type="button"
                 onClick={openMenu}
                 ref={ctaPrimaryRef}
-                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 md:py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
               >
                 Ver cardápio →
               </button>
@@ -537,7 +537,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 ref={ctaSecondaryRef}
-                className="w-full md:w-auto md:min-w-[220px] mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] mt-2 border border-white/40 bg-white/10 text-white font-bold py-3 md:py-3.5 rounded-2xl text-base text-center hover:bg-white/15 active:scale-[0.98] transition will-change-transform"
               >
                 Entrar no grupo
               </a>
@@ -547,7 +547,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setShowInstallModal(true)}
-                  className="mt-3 text-sm font-medium text-white/40 hover:text-white/70 py-2 transition"
+                  className="mt-2 text-sm font-medium text-white/40 hover:text-white/70 py-1.5 transition"
                 >
                   + Instalar app
                 </button>
@@ -561,9 +561,9 @@ export default function Home() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition"
               >
-                <div className="shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
+                <div className="shrink-0 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
                   <span className="text-lg font-bold text-[#4285F4]">G</span>
                 </div>
                 <div>
@@ -579,7 +579,7 @@ export default function Home() {
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
                   <div>
@@ -591,7 +591,7 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad)" strokeWidth="2">
                     <defs>
@@ -616,7 +616,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setTab("hours")}
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition text-left"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition text-left"
               >
                 <span className="text-2xl" aria-hidden>🕐</span>
                 <div>
@@ -630,36 +630,33 @@ export default function Home() {
           {/* Mobile-only info cards (below CTAs) */}
           <div className="md:hidden">
             {/* Google rating */}
-            <div className="w-full mt-8 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-3">Avaliações</h2>
+            <div className="w-full mt-4 text-left px-5">
               <a
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.98] transition"
               >
-                <div className="shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
-                  <span className="text-lg font-bold text-[#4285F4]">G</span>
+                <div className="shrink-0 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center">
+                  <span className="text-base font-bold text-[#4285F4]">G</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Google</p>
-                  <p className="text-sm text-[#FFD100]">★★★★★ 5.0</p>
-                  <p className="text-xs text-white/40">Ver no Google Maps</p>
+                  <p className="text-xs font-bold text-white">Google ★★★★★ 5.0</p>
+                  <p className="text-[10px] text-white/40">Ver no Google Maps</p>
                 </div>
               </a>
             </div>
 
             {/* Contact links */}
-            <div className="w-full mt-6 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-3">Contato</h2>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="w-full mt-2.5 text-left px-5">
+              <div className="grid grid-cols-2 gap-2.5">
                 <a
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
                 >
-                  <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
+                  <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                   <div>
                     <p className="text-xs font-bold text-white">WhatsApp</p>
                     <p className="text-[10px] text-white/40">Falar agora</p>
@@ -669,9 +666,9 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
                 >
-                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
                     <defs>
                       <linearGradient id="ig-grad-m" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor="#f09433" />
@@ -708,22 +705,30 @@ export default function Home() {
       </a>
 
       {/* Bottom nav - mobile only */}
-      <nav className="md:hidden shrink-0 z-30 bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <nav className="md:hidden shrink-0 z-30 bg-black/80 backdrop-blur-xl border-t border-white/10 px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-evenly max-w-md mx-auto">
           <button
             type="button"
             onClick={goHome}
-            className={`flex flex-col items-center gap-0.5 min-w-[80px] transition active:scale-90 ${tab === "home" ? "text-[#FFD100]" : "text-white/30"}`}
+            className={`flex flex-col items-center gap-0.5 min-w-[80px] py-1 rounded-lg transition active:scale-90 ${tab === "home" ? "text-[#FFD100]" : "text-white/40"}`}
           >
-            <span className="text-xl">🏠</span>
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12l9-9 9 9" />
+              <path d="M5 10v10h14V10" />
+            </svg>
             <span className="text-[10px] font-semibold">Início</span>
           </button>
           <button
             type="button"
             onClick={openMenu}
-            className={`flex flex-col items-center gap-0.5 min-w-[80px] transition active:scale-90 ${tab === "menu" ? "text-[#FFD100]" : "text-white/30"}`}
+            className={`flex flex-col items-center gap-0.5 min-w-[80px] py-1 rounded-lg transition active:scale-90 ${tab === "menu" ? "text-[#FFD100]" : "text-white/40"}`}
           >
-            <span className="text-xl">📋</span>
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="3" width="16" height="18" rx="2" />
+              <line x1="8" y1="8" x2="16" y2="8" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+              <line x1="8" y1="16" x2="13" y2="16" />
+            </svg>
             <span className="text-[10px] font-semibold">Cardápio</span>
           </button>
         </div>
