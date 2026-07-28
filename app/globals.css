@@ -53,44 +53,6 @@ a {
   }
 }
 
-/* === CTA alive === */
-@keyframes cta-breathe {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 4px 20px rgba(255, 209, 0, 0.15);
-  }
-  50% {
-    transform: scale(1.015);
-    box-shadow: 0 8px 30px rgba(255, 209, 0, 0.35);
-  }
-}
-
-@keyframes cta-breathe-ghost {
-  0%, 100% {
-    transform: scale(1);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  50% {
-    transform: scale(1.01);
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-}
-
-.cta-alive {
-  animation: cta-breathe 3s ease-in-out infinite;
-}
-
-.cta-alive-ghost {
-  animation: cta-breathe-ghost 4s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-alive,
-  .cta-alive-ghost {
-    animation: none;
-  }
-}
-
 /* === Reduce motion === */
 @media (prefers-reduced-motion: reduce) {
   *,

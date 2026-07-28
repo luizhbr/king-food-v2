@@ -154,34 +154,83 @@ export default function Home() {
     return () => el.removeEventListener("scroll", onScroll);
   }, [tab]);
 
-  // Magnetic effect for CTA buttons (desktop only)
+  // Alive CTA buttons: random autonomous movement + magnetic mouse effect
   useEffect(() => {
     if (tab !== "home") return;
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    if (isTouch) return;
 
     const buttons = [ctaPrimaryRef.current, ctaSecondaryRef.current].filter(Boolean) as HTMLElement[];
+    if (buttons.length === 0) return;
 
-    const handlers = buttons.map((btn) => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
+    const states = buttons.map(() => ({
+      cx: 0, cy: 0, cs: 1, cr: 0,
+      tx: 0, ty: 0, ts: 1, tr: 0,
+      nextChange: 0,
+      hovering: false,
+      mx: 0, my: 0,
+    }));
+
+    const mouseHandlers = buttons.map((btn, i) => {
       const onMove = (e: MouseEvent) => {
+        states[i].hovering = true;
         const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.2}px) scale(1.05)`;
+        states[i].mx = e.clientX - rect.left - rect.width / 2;
+        states[i].my = e.clientY - rect.top - rect.height / 2;
       };
-      const onLeave = () => {
-        btn.style.transform = "";
-      };
-      btn.addEventListener("mousemove", onMove);
-      btn.addEventListener("mouseleave", onLeave);
-      return { btn, onMove, onLeave };
+      const onLeave = () => { states[i].hovering = false; };
+      if (!isTouch) {
+        btn.addEventListener("mousemove", onMove);
+        btn.addEventListener("mouseleave", onLeave);
+      }
+      return { onMove, onLeave };
     });
 
-    return () => {
-      handlers.forEach(({ btn, onMove, onLeave }) => {
-        btn.removeEventListener("mousemove", onMove);
-        btn.removeEventListener("mouseleave", onLeave);
+    let rafId: number;
+    const animate = (time: number) => {
+      buttons.forEach((btn, i) => {
+        const s = states[i];
+
+        if (s.hovering && !isTouch) {
+          // Magnetic: follow mouse
+          s.tx = s.mx * 0.15;
+          s.ty = s.my * 0.2;
+          s.ts = 1.05;
+          s.tr = s.mx * 0.02;
+        } else {
+          // Random autonomous movement
+          if (time > s.nextChange) {
+            s.tx = (Math.random() - 0.5) * 10;
+            s.ty = (Math.random() - 0.5) * 8;
+            s.ts = 1 + Math.random() * 0.03;
+            s.tr = (Math.random() - 0.5) * 2;
+            s.nextChange = time + 1500 + Math.random() * 2000;
+          }
+        }
+
+        // Smooth interpolation
+        s.cx += (s.tx - s.cx) * 0.06;
+        s.cy += (s.ty - s.cy) * 0.06;
+        s.cs += (s.ts - s.cs) * 0.06;
+        s.cr += (s.tr - s.cr) * 0.06;
+
+        btn.style.transform = `translate(${s.cx}px, ${s.cy}px) scale(${s.cs}) rotate(${s.cr}deg)`;
       });
+      rafId = requestAnimationFrame(animate);
+    };
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (!isTouch) {
+        mouseHandlers.forEach(({ onMove, onLeave }, i) => {
+          buttons[i].removeEventListener("mousemove", onMove);
+          buttons[i].removeEventListener("mouseleave", onLeave);
+        });
+      }
     };
   }, [tab]);
 
@@ -295,19 +344,20 @@ export default function Home() {
     >
       {/* Header */}
       <header className={`shrink-0 z-40 text-white border-b transition-all duration-300 ${scrolled || tab !== "home" ? "bg-black/60 backdrop-blur-md border-white/10" : "bg-transparent border-transparent"}`}>
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-3 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-3">
+            {/* Hamburger - mobile only */}
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl hover:bg-white/10 transition active:scale-90"
+              className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl hover:bg-white/10 transition active:scale-90"
               aria-label="Abrir menu"
             >
               <span className="block w-5 h-0.5 bg-white rounded" />
               <span className="block w-5 h-0.5 bg-white rounded" />
               <span className="block w-5 h-0.5 bg-white rounded" />
             </button>
-            <button type="button" onClick={goHome} className={`flex items-center gap-2.5 active:scale-95 transition-all duration-300 ${scrolled || tab !== "home" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+            <button type="button" onClick={goHome} className={`flex items-center gap-2.5 active:scale-95 transition-all duration-300 ${scrolled || tab !== "home" ? "opacity-100" : "opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto"}`}>
               <img src={LOGO} alt="King Food" className="w-8 h-8 object-contain rounded-lg" />
               <div className="leading-tight text-left">
                 <p className="font-bold text-sm tracking-tight">King Food</p>
@@ -315,11 +365,22 @@ export default function Home() {
               </div>
             </button>
           </div>
+
+          {/* Inline nav - desktop only */}
+          <nav className="hidden md:flex items-center gap-1">
+            <button type="button" onClick={goHome} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "home" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Início</button>
+            <button type="button" onClick={openMenu} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "menu" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Cardápio</button>
+            <button type="button" onClick={() => setTab("hours")} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "hours" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Horários</button>
+            <a href={GROUP_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Grupo</a>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Instagram</a>
+            <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="ml-1 px-4 py-2 rounded-lg text-sm font-bold bg-[#25D366] text-white hover:bg-[#25D366]/90 transition">WhatsApp</a>
+          </nav>
+
           {tab !== "home" && (
             <button
               type="button"
               onClick={goHome}
-              className="text-xs font-semibold text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/10 active:scale-95 transition"
+              className="md:hidden text-xs font-semibold text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/10 active:scale-95 transition"
             >
               ← Início
             </button>
@@ -386,7 +447,7 @@ export default function Home() {
 
       {/* Menu tab */}
       {tab === "menu" ? (
-        <div className="flex-1 relative min-h-0 bg-white">
+        <div className="flex-1 relative min-h-0 bg-white max-w-5xl mx-auto w-full">
           {!iframeReady && (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black px-6">
               <div className="w-10 h-10 border-4 border-[#FFD100] border-t-transparent rounded-full animate-spin" />
@@ -405,7 +466,7 @@ export default function Home() {
           />
         </div>
       ) : tab === "hours" ? (
-        <main className="flex-1 overflow-y-auto px-4 py-5">
+        <main className="flex-1 overflow-y-auto px-4 py-5 max-w-2xl mx-auto w-full">
           <div className="flex items-center gap-2 mb-5">
             <span className="text-2xl" aria-hidden>🕐</span>
             <h2 className="text-lg font-extrabold text-white">Horários e entrega</h2>
@@ -445,54 +506,57 @@ export default function Home() {
       ) : (
         /* Home tab */
         <main ref={mainRef} className="flex-1 overflow-y-auto">
-          <div className="max-w-sm mx-auto flex flex-col items-center text-center px-5 pt-10 pb-6">
-            {/* Logo */}
-            <img src={LOGO} alt="King Food" className="w-24 h-24 object-contain mb-4 rounded-2xl" />
+          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-10 pb-6 md:pt-16">
+            {/* Left: logo + title + CTA */}
+            <div className="flex flex-col items-center md:items-start flex-1">
+              {/* Logo */}
+              <img src={LOGO} alt="King Food" className="w-24 h-24 md:w-32 md:h-32 object-contain mb-4 rounded-2xl" />
 
-            {/* Title */}
-            <h1 className="text-2xl font-extrabold text-white mb-1 tracking-tight">King Food</h1>
-            <p className="text-sm text-white/50 mb-4">Açaí Premium • Columbus, OH</p>
+              {/* Title */}
+              <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">King Food</h1>
+              <p className="text-sm md:text-base text-white/50 mb-4">Açaí Premium • Columbus, OH</p>
 
-            {/* Description */}
-            <p className="text-sm text-white/70 leading-relaxed mb-6">
-              Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
-            </p>
+              {/* Description */}
+              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-6 max-w-md">
+                Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
+              </p>
 
-            {/* Primary CTA */}
-            <button
-              type="button"
-              onClick={openMenu}
-              ref={ctaPrimaryRef}
-              className="cta-alive w-full bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
-            >
-              Ver cardápio →
-            </button>
-
-            {/* Secondary CTA */}
-            <a
-              href={GROUP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              ref={ctaSecondaryRef}
-              className="cta-alive-ghost w-full mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
-            >
-              Entrar no grupo
-            </a>
-
-            {/* Install */}
-            {canInstall && (
+              {/* Primary CTA */}
               <button
                 type="button"
-                onClick={() => setShowInstallModal(true)}
-                className="mt-3 text-sm font-medium text-white/40 hover:text-white/70 py-2 transition"
+                onClick={openMenu}
+                ref={ctaPrimaryRef}
+                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
               >
-                + Instalar app
+                Ver cardápio →
               </button>
-            )}
 
-            {/* Google rating */}
-            <div className="w-full mt-8 text-left">
-              <h2 className="text-sm font-extrabold text-white mb-3">Avaliações</h2>
+              {/* Secondary CTA */}
+              <a
+                href={GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                ref={ctaSecondaryRef}
+                className="w-full md:w-auto md:min-w-[220px] mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+              >
+                Entrar no grupo
+              </a>
+
+              {/* Install */}
+              {canInstall && (
+                <button
+                  type="button"
+                  onClick={() => setShowInstallModal(true)}
+                  className="mt-3 text-sm font-medium text-white/40 hover:text-white/70 py-2 transition"
+                >
+                  + Instalar app
+                </button>
+              )}
+            </div>
+
+            {/* Right: info cards (desktop only) */}
+            <div className="hidden md:flex flex-col gap-4 flex-1 mt-0">
+              {/* Google rating */}
               <a
                 href={MAPS_URL}
                 target="_blank"
@@ -508,11 +572,8 @@ export default function Home() {
                   <p className="text-xs text-white/40">Ver no Google Maps</p>
                 </div>
               </a>
-            </div>
 
-            {/* Contact links */}
-            <div className="w-full mt-6 text-left">
-              <h2 className="text-sm font-extrabold text-white mb-3">Contato</h2>
+              {/* Contact cards */}
               <div className="grid grid-cols-2 gap-3">
                 <a
                   href={WA_URL}
@@ -550,6 +611,84 @@ export default function Home() {
                   </div>
                 </a>
               </div>
+
+              {/* Hours summary */}
+              <button
+                type="button"
+                onClick={() => setTab("hours")}
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition text-left"
+              >
+                <span className="text-2xl" aria-hidden>🕐</span>
+                <div>
+                  <p className="text-sm font-bold text-white">Horários e entrega</p>
+                  <p className="text-xs text-white/40">Em até 40 min • Columbus, OH</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile-only info cards (below CTAs) */}
+          <div className="md:hidden">
+            {/* Google rating */}
+            <div className="w-full mt-8 text-left px-5">
+              <h2 className="text-sm font-extrabold text-white mb-3">Avaliações</h2>
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition"
+              >
+                <div className="shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
+                  <span className="text-lg font-bold text-[#4285F4]">G</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white">Google</p>
+                  <p className="text-sm text-[#FFD100]">★★★★★ 5.0</p>
+                  <p className="text-xs text-white/40">Ver no Google Maps</p>
+                </div>
+              </a>
+            </div>
+
+            {/* Contact links */}
+            <div className="w-full mt-6 text-left px-5">
+              <h2 className="text-sm font-extrabold text-white mb-3">Contato</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href={WA_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                >
+                  <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
+                  <div>
+                    <p className="text-xs font-bold text-white">WhatsApp</p>
+                    <p className="text-[10px] text-white/40">Falar agora</p>
+                  </div>
+                </a>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
+                >
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
+                    <defs>
+                      <linearGradient id="ig-grad-m" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f09433" />
+                        <stop offset="50%" stopColor="#e6683c" />
+                        <stop offset="100%" stopColor="#dc2743" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="1" fill="url(#ig-grad-m)" stroke="none" />
+                  </svg>
+                  <div>
+                    <p className="text-xs font-bold text-white">Instagram</p>
+                    <p className="text-[10px] text-white/40">@king.food_delivery</p>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </main>
@@ -557,19 +696,19 @@ export default function Home() {
 
       <InstallModal open={showInstallModal} onInstall={handleInstall} onDismiss={dismissInstallModal} />
 
-      {/* Floating WhatsApp */}
+      {/* Floating WhatsApp - mobile only */}
       <a
         href={WA_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed z-[45] right-4 bottom-20 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#25D366]/90 text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center active:scale-90 transition"
+        className="md:hidden fixed z-[45] right-4 bottom-20 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#25D366]/90 text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center active:scale-90 transition"
         aria-label="WhatsApp"
       >
         <WhatsAppIcon className="w-7 h-7" />
       </a>
 
-      {/* Bottom nav */}
-      <nav className="shrink-0 z-30 bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      {/* Bottom nav - mobile only */}
+      <nav className="md:hidden shrink-0 z-30 bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-evenly max-w-md mx-auto">
           <button
             type="button"
