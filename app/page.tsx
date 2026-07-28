@@ -521,26 +521,34 @@ export default function Home() {
                 Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
               </p>
 
-              {/* Primary CTA */}
-              <button
-                type="button"
-                onClick={openMenu}
-                ref={ctaPrimaryRef}
-                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 md:py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
-              >
-                Ver cardápio →
-              </button>
+              {/* CTA wrapper with vignette */}
+              <div className="relative w-full md:w-auto">
+                {/* Vignette behind buttons */}
+                <div className="absolute inset-0 -m-6 md:-m-8 rounded-3xl bg-gradient-radial from-black/50 via-black/30 to-transparent pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.5), transparent 70%)" }} />
 
-              {/* Secondary CTA */}
-              <a
-                href={GROUP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                ref={ctaSecondaryRef}
-                className="w-full md:w-auto md:min-w-[220px] mt-2 border border-white/40 bg-white/10 text-white font-bold py-3 md:py-3.5 rounded-2xl text-base text-center hover:bg-white/15 active:scale-[0.98] transition will-change-transform"
-              >
-                Entrar no grupo
-              </a>
+                <div className="relative flex flex-col w-full md:w-auto">
+                  {/* Primary CTA */}
+                  <button
+                    type="button"
+                    onClick={openMenu}
+                    ref={ctaPrimaryRef}
+                    className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 md:py-4 rounded-2xl text-base shadow-xl shadow-[#FFD100]/30 active:scale-[0.98] transition will-change-transform"
+                  >
+                    Ver cardápio →
+                  </button>
+
+                  {/* Secondary CTA */}
+                  <a
+                    href={GROUP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ref={ctaSecondaryRef}
+                    className="w-full md:w-auto md:min-w-[220px] mt-2 border border-white/50 bg-white/15 backdrop-blur-sm text-white font-bold py-3 md:py-3.5 rounded-2xl text-base text-center hover:bg-white/25 active:scale-[0.98] transition will-change-transform"
+                  >
+                    Entrar no grupo
+                  </a>
+                </div>
+              </div>
 
               {/* Install */}
               {canInstall && (
@@ -561,7 +569,7 @@ export default function Home() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-4 hover:bg-white/20 active:scale-[0.98] transition"
               >
                 <div className="shrink-0 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
                   <span className="text-lg font-bold text-[#4285F4]">G</span>
@@ -579,7 +587,7 @@ export default function Home() {
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3.5 hover:bg-white/20 active:scale-[0.97] transition"
                 >
                   <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
                   <div>
@@ -591,7 +599,7 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3.5 hover:bg-white/20 active:scale-[0.97] transition"
                 >
                   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad)" strokeWidth="2">
                     <defs>
@@ -616,7 +624,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setTab("hours")}
-                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition text-left"
+                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-4 hover:bg-white/20 active:scale-[0.98] transition text-left"
               >
                 <span className="text-2xl" aria-hidden>🕐</span>
                 <div>
@@ -635,7 +643,7 @@ export default function Home() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.98] transition"
               >
                 <div className="shrink-0 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center">
                   <span className="text-base font-bold text-[#4285F4]">G</span>
@@ -654,7 +662,7 @@ export default function Home() {
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.97] transition"
                 >
                   <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                   <div>
@@ -666,7 +674,7 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.97] transition"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
                     <defs>
