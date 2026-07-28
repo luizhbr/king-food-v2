@@ -447,7 +447,7 @@ export default function Home() {
 
       {/* Menu tab */}
       {tab === "menu" ? (
-        <div className="flex-1 relative min-h-0 bg-white max-w-5xl mx-auto w-full">
+        <div className="flex-1 relative min-h-0 bg-white max-w-5xl mx-auto w-full md:pb-0 pb-14">
           {!iframeReady && (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black px-6">
               <div className="w-10 h-10 border-4 border-[#FFD100] border-t-transparent rounded-full animate-spin" />
@@ -466,7 +466,7 @@ export default function Home() {
           />
         </div>
       ) : tab === "hours" ? (
-        <main className="flex-1 overflow-y-auto px-4 py-5 max-w-2xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto px-4 py-5 max-w-2xl mx-auto w-full md:pb-6 pb-14">
           <div className="flex items-center gap-2 mb-5">
             <span className="text-2xl" aria-hidden>🕐</span>
             <h2 className="text-lg font-extrabold text-white">Horários e entrega</h2>
@@ -505,7 +505,7 @@ export default function Home() {
         </main>
       ) : (
         /* Home tab */
-        <main ref={mainRef} className="flex-1 overflow-y-auto">
+        <main ref={mainRef} className="flex-1 overflow-y-auto md:pb-6 pb-14">
           <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-4 md:pt-16 pb-2 md:pb-6">
             {/* Left: logo + title + CTA */}
             <div className="flex flex-col items-center md:items-start flex-1">
@@ -521,34 +521,26 @@ export default function Home() {
                 Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
               </p>
 
-              {/* CTA wrapper with vignette */}
-              <div className="relative w-full md:w-auto">
-                {/* Vignette behind buttons */}
-                <div className="absolute inset-0 -m-6 md:-m-8 rounded-3xl bg-gradient-radial from-black/50 via-black/30 to-transparent pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.5), transparent 70%)" }} />
+              {/* Primary CTA */}
+              <button
+                type="button"
+                onClick={openMenu}
+                ref={ctaPrimaryRef}
+                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 md:py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
+              >
+                Ver cardápio →
+              </button>
 
-                <div className="relative flex flex-col w-full md:w-auto">
-                  {/* Primary CTA */}
-                  <button
-                    type="button"
-                    onClick={openMenu}
-                    ref={ctaPrimaryRef}
-                    className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 md:py-4 rounded-2xl text-base shadow-xl shadow-[#FFD100]/30 active:scale-[0.98] transition will-change-transform"
-                  >
-                    Ver cardápio →
-                  </button>
-
-                  {/* Secondary CTA */}
-                  <a
-                    href={GROUP_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    ref={ctaSecondaryRef}
-                    className="w-full md:w-auto md:min-w-[220px] mt-2 border border-white/50 bg-white/15 backdrop-blur-sm text-white font-bold py-3 md:py-3.5 rounded-2xl text-base text-center hover:bg-white/25 active:scale-[0.98] transition will-change-transform"
-                  >
-                    Entrar no grupo
-                  </a>
-                </div>
-              </div>
+              {/* Secondary CTA */}
+              <a
+                href={GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                ref={ctaSecondaryRef}
+                className="w-full md:w-auto md:min-w-[220px] mt-2 border border-white/40 bg-white/10 text-white font-bold py-3 md:py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+              >
+                Entrar no grupo
+              </a>
 
               {/* Install */}
               {canInstall && (
@@ -569,7 +561,7 @@ export default function Home() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-4 hover:bg-white/20 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition"
               >
                 <div className="shrink-0 w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
                   <span className="text-lg font-bold text-[#4285F4]">G</span>
@@ -587,7 +579,7 @@ export default function Home() {
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3.5 hover:bg-white/20 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
                   <div>
@@ -599,7 +591,7 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3.5 hover:bg-white/20 active:scale-[0.97] transition"
+                  className="flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 p-3.5 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad)" strokeWidth="2">
                     <defs>
@@ -624,7 +616,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setTab("hours")}
-                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-4 hover:bg-white/20 active:scale-[0.98] transition text-left"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 hover:bg-white/15 active:scale-[0.98] transition text-left"
               >
                 <span className="text-2xl" aria-hidden>🕐</span>
                 <div>
@@ -643,7 +635,7 @@ export default function Home() {
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.98] transition"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.98] transition"
               >
                 <div className="shrink-0 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center">
                   <span className="text-base font-bold text-[#4285F4]">G</span>
@@ -662,7 +654,7 @@ export default function Home() {
                   href={WA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                   <div>
@@ -674,7 +666,7 @@ export default function Home() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm p-3 hover:bg-white/20 active:scale-[0.97] transition"
+                  className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 p-3 hover:bg-white/15 active:scale-[0.97] transition"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
                     <defs>
@@ -706,14 +698,14 @@ export default function Home() {
         href={WA_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="md:hidden fixed z-[45] right-4 bottom-20 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#25D366]/90 text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center active:scale-90 transition"
+        className="md:hidden fixed z-[45] right-4 bottom-16 w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#25D366]/90 text-white shadow-lg shadow-[#25D366]/30 flex items-center justify-center active:scale-90 transition"
         aria-label="WhatsApp"
       >
         <WhatsAppIcon className="w-7 h-7" />
       </a>
 
-      {/* Bottom nav - mobile only */}
-      <nav className="md:hidden shrink-0 z-30 bg-black/80 backdrop-blur-xl border-t border-white/10 px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+      {/* Bottom nav - mobile only, fixed at bottom */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-black/80 backdrop-blur-xl border-t border-white/10 px-4 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-evenly max-w-md mx-auto">
           <button
             type="button"
