@@ -244,9 +244,14 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-black overflow-hidden">
+    <div
+      className="flex flex-col h-screen overflow-hidden relative"
+      style={{
+        background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.15) 100%), url('/bg-acai.jpg') center/cover no-repeat`,
+      }}
+    >
       {/* Header */}
-      <header className="shrink-0 z-40 bg-black text-white border-b border-white/10">
+      <header className="shrink-0 z-40 text-white border-b border-white/10 bg-black/60 backdrop-blur-md">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <button
@@ -357,7 +362,7 @@ export default function Home() {
           />
         </div>
       ) : tab === "hours" ? (
-        <main className="flex-1 overflow-y-auto bg-black px-4 py-5">
+        <main className="flex-1 overflow-y-auto px-4 py-5">
           <div className="flex items-center gap-2 mb-5">
             <span className="text-2xl" aria-hidden>🕐</span>
             <h2 className="text-lg font-extrabold text-white">Horários e entrega</h2>
@@ -396,7 +401,7 @@ export default function Home() {
         </main>
       ) : (
         /* Home tab */
-        <main className="flex-1 overflow-y-auto bg-black">
+        <main className="flex-1 overflow-y-auto">
           <div className="max-w-sm mx-auto flex flex-col items-center text-center px-5 pt-10 pb-6">
             {/* Logo */}
             <img src={LOGO} alt="King Food" className="w-24 h-24 object-contain mb-4 rounded-2xl" />
@@ -519,7 +524,7 @@ export default function Home() {
       </a>
 
       {/* Bottom nav */}
-      <nav className="shrink-0 z-30 bg-black border-t border-white/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <nav className="shrink-0 z-30 bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-evenly max-w-md mx-auto">
           <button
             type="button"
