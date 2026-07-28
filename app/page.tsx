@@ -65,33 +65,33 @@ function InstallModal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-5">
-      <div className="absolute inset-0 bg-black/60" onClick={onDismiss} aria-hidden />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onDismiss} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="install-title"
-        className="relative z-10 w-full max-w-sm rounded-3xl bg-[#FFD100] p-6 shadow-2xl text-center"
+        className="relative z-10 w-full max-w-sm rounded-3xl border border-white/10 bg-black/90 backdrop-blur-xl p-6 shadow-2xl text-center"
       >
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-black">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFD100]">
           <img src={LOGO} alt="" className="h-11 w-11 object-contain" />
         </div>
-        <h2 id="install-title" className="text-lg font-extrabold text-black">
+        <h2 id="install-title" className="text-lg font-extrabold text-white">
           Instale nosso app
         </h2>
-        <p className="mt-2 text-sm text-black/70 leading-relaxed">
+        <p className="mt-2 text-sm text-white/60 leading-relaxed">
           Peça mais rápido direto da tela inicial do seu celular.
         </p>
         <button
           type="button"
           onClick={onInstall}
-          className="mt-5 w-full rounded-2xl bg-black py-3.5 text-sm font-bold text-[#FFD100] active:scale-[0.99] transition"
+          className="mt-5 w-full rounded-2xl bg-[#FFD100] py-3.5 text-sm font-bold text-black shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition"
         >
           Instalar agora
         </button>
         <button
           type="button"
           onClick={onDismiss}
-          className="mt-2 w-full py-2.5 text-sm font-medium text-black/50 hover:text-black/80"
+          className="mt-2 w-full py-2.5 text-sm font-medium text-white/40 hover:text-white/70 transition"
         >
           Agora não
         </button>
