@@ -112,6 +112,8 @@ export default function Home() {
   const deferredPrompt = useRef<BeforeInstallPromptEvent | null>(null);
   const loadingDone = useRef(false);
   const mainRef = useRef<HTMLElement>(null);
+  const ctaPrimaryRef = useRef<HTMLButtonElement>(null);
+  const ctaSecondaryRef = useRef<HTMLAnchorElement>(null);
   const today = new Date().getDay();
 
   const tryShowModal = useCallback(() => {
@@ -150,6 +152,37 @@ export default function Home() {
     const onScroll = () => setScrolled(el.scrollTop > 80);
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
+  }, [tab]);
+
+  // Magnetic effect for CTA buttons (desktop only)
+  useEffect(() => {
+    if (tab !== "home") return;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    if (isTouch) return;
+
+    const buttons = [ctaPrimaryRef.current, ctaSecondaryRef.current].filter(Boolean) as HTMLElement[];
+
+    const handlers = buttons.map((btn) => {
+      const onMove = (e: MouseEvent) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.2}px) scale(1.05)`;
+      };
+      const onLeave = () => {
+        btn.style.transform = "";
+      };
+      btn.addEventListener("mousemove", onMove);
+      btn.addEventListener("mouseleave", onLeave);
+      return { btn, onMove, onLeave };
+    });
+
+    return () => {
+      handlers.forEach(({ btn, onMove, onLeave }) => {
+        btn.removeEventListener("mousemove", onMove);
+        btn.removeEventListener("mouseleave", onLeave);
+      });
+    };
   }, [tab]);
 
   useEffect(() => {
@@ -429,7 +462,8 @@ export default function Home() {
             <button
               type="button"
               onClick={openMenu}
-              className="w-full bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition"
+              ref={ctaPrimaryRef}
+              className="cta-alive w-full bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-4 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
             >
               Ver cardápio →
             </button>
@@ -439,7 +473,8 @@ export default function Home() {
               href={GROUP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition"
+              ref={ctaSecondaryRef}
+              className="cta-alive-ghost w-full mt-3 border border-white/20 text-white font-bold py-3.5 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
             >
               Entrar no grupo
             </a>
