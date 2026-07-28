@@ -108,6 +108,8 @@ export default function Home() {
   const [iframeReady, setIframeReady] = useState(false);
   const [canInstall, setCanInstall] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const [installPlatform, setInstallPlatform] = useState<"android" | "ios" | "desktop">("android");
   const [scrolled, setScrolled] = useState(false);
   const deferredPrompt = useRef<BeforeInstallPromptEvent | null>(null);
   const loadingDone = useRef(false);
@@ -135,9 +137,26 @@ export default function Home() {
         setShowInstallModal(true);
       }
     }, 1800);
+
+    // Fallback: show custom install banner after 3s if no beforeinstallprompt
+    const bannerTimer = setTimeout(() => {
+      const dismissed = sessionStorage.getItem(INSTALL_DISMISS_KEY) === "1";
+      if (dismissed) return;
+      if (deferredPrompt.current || window.__kfDeferredPrompt) return; // native prompt will handle it
+
+      // Detect platform
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+      const isAndroid = /Android/.test(ua);
+      const isDesktop = !isIOS && !isAndroid;
+      setInstallPlatform(isIOS ? "ios" : isAndroid ? "android" : "desktop");
+      setShowInstallBanner(true);
+    }, 3000);
+
     return () => {
       clearTimeout(logoTimer);
       clearTimeout(safetyTimer);
+      clearTimeout(bannerTimer);
     };
   }, []);
 
@@ -695,6 +714,52 @@ export default function Home() {
       )}
 
       <InstallModal open={showInstallModal} onInstall={handleInstall} onDismiss={dismissInstallModal} />
+
+      {/* Custom install banner (fallback for non-Chrome browsers) */}
+      {showInstallBanner && !showInstallModal && (
+        <div className="fixed bottom-0 left-0 right-0 z-[90] md:bottom-0 px-4 pb-16 md:pb-4">
+          <div className="mx-auto max-w-sm rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl p-4 shadow-2xl flex items-center gap-3">
+            <div className="shrink-0 w-11 h-11 rounded-xl bg-[#FFD100] flex items-center justify-center">
+              <img src={LOGO} alt="" className="w-8 h-8 object-contain" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white">Instale o King Food</p>
+              <p className="text-xs text-white/50 leading-snug">
+                {installPlatform === "ios"
+                  ? "Toque em Compartilhar → Adicionar à Tela de Início"
+                  : installPlatform === "android"
+                  ? "Adicione à tela inicial para acesso rápido"
+                  : "Instale como app no seu navegador"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (installPlatform === "android" && deferredPrompt.current) {
+                  handleInstall();
+                } else {
+                  setShowInstallBanner(false);
+                  sessionStorage.setItem(INSTALL_DISMISS_KEY, "1");
+                }
+              }}
+              className="shrink-0 rounded-xl bg-[#FFD100] px-3 py-2 text-xs font-bold text-black active:scale-95 transition"
+            >
+              {installPlatform === "ios" ? "Ver" : "Instalar"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowInstallBanner(false);
+                sessionStorage.setItem(INSTALL_DISMISS_KEY, "1");
+              }}
+              className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white/30 hover:text-white/60 transition"
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Floating WhatsApp - mobile only */}
       <a
