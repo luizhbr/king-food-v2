@@ -18,26 +18,15 @@ type Tab = "home" | "menu" | "hours";
 const SIDE_LINKS: {
   label: string;
   icon: string;
-  action?: "hours";
+  action?: "hours" | "menu";
   href?: string;
 }[] = [
-  { label: "Entrar no grupo", icon: "💬", href: GROUP_URL },
+  { label: "Cardápio", icon: "🥣", action: "menu" },
+  { label: "Grupo WhatsApp", icon: "💬", href: GROUP_URL },
+  { label: "WhatsApp", icon: "📱", href: WA_URL },
   { label: "Instagram", icon: "📸", href: INSTAGRAM_URL },
+  { label: "Google Maps", icon: "📍", href: MAPS_URL },
   { label: "Horários e entrega", icon: "🕐", action: "hours" },
-  { label: "Fale conosco", icon: "📱", href: WA_URL },
-];
-
-/** Quick actions inspired by franchise location UX — KF identity, not beach palette */
-const QUICK_CHIPS: {
-  label: string;
-  action?: "menu" | "hours";
-  href?: string;
-}[] = [
-  { label: "Cardápio", action: "menu" },
-  { label: "Grupo", href: GROUP_URL },
-  { label: "WhatsApp", href: WA_URL },
-  { label: "Mapas", href: MAPS_URL },
-  { label: "Horários", action: "hours" },
 ];
 
 const HOURS = [
@@ -418,12 +407,10 @@ export default function Home() {
             <button type="button" onClick={goHome} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "home" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Início</button>
             <button type="button" onClick={openMenu} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "menu" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Cardápio</button>
             <button type="button" onClick={() => setTab("hours")} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "hours" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Horários</button>
-            <a href={GROUP_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Grupo</a>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Instagram</a>
             <button
               type="button"
               onClick={openMenu}
-              className="ml-1 px-4 py-2 rounded-full text-sm font-extrabold bg-[#FFD100] text-black hover:bg-[#ffe14a] shadow-lg shadow-[#FFD100]/20 transition active:scale-95"
+              className="ml-2 px-4 py-2 rounded-full text-sm font-extrabold bg-[#FFD100] text-black hover:bg-[#ffe14a] shadow-lg shadow-[#FFD100]/20 transition active:scale-95"
             >
               Pedir agora
             </button>
@@ -479,18 +466,34 @@ export default function Home() {
           </button>
         </div>
         <nav className="py-2">
-          {SIDE_LINKS.map((link) =>
-            link.action === "hours" ? (
-              <button
-                key={link.label}
-                type="button"
-                onClick={() => { setDrawerOpen(false); setTab("hours"); }}
-                className="w-full text-left px-5 py-4 text-sm font-medium text-white/80 hover:bg-[#FFD100] hover:text-black border-b border-white/5 transition active:bg-[#FFD100]/80"
-              >
-                <span className="mr-3">{link.icon}</span>
-                {link.label}
-              </button>
-            ) : (
+          {SIDE_LINKS.map((link) => {
+            if (link.action === "hours") {
+              return (
+                <button
+                  key={link.label}
+                  type="button"
+                  onClick={() => { setDrawerOpen(false); setTab("hours"); }}
+                  className="w-full text-left px-5 py-4 text-sm font-medium text-white/80 hover:bg-[#FFD100] hover:text-black border-b border-white/5 transition active:bg-[#FFD100]/80"
+                >
+                  <span className="mr-3">{link.icon}</span>
+                  {link.label}
+                </button>
+              );
+            }
+            if (link.action === "menu") {
+              return (
+                <button
+                  key={link.label}
+                  type="button"
+                  onClick={() => { setDrawerOpen(false); openMenu(); }}
+                  className="w-full text-left px-5 py-4 text-sm font-medium text-white/80 hover:bg-[#FFD100] hover:text-black border-b border-white/5 transition active:bg-[#FFD100]/80"
+                >
+                  <span className="mr-3">{link.icon}</span>
+                  {link.label}
+                </button>
+              );
+            }
+            return (
               <a
                 key={link.label}
                 href={link.href}
@@ -502,8 +505,8 @@ export default function Home() {
                 <span className="mr-3">{link.icon}</span>
                 {link.label}
               </a>
-            )
-          )}
+            );
+          })}
         </nav>
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
           <p className="text-xs text-white/30 text-center">Entrega em até 40 min • Columbus, OH</p>
@@ -569,257 +572,75 @@ export default function Home() {
           </div>
         </main>
       ) : (
-        /* Home tab */
+        /* Home tab — enxuta: 1 CTA + strip de atalhos (resto no menu/drawer) */
         <main ref={mainRef} className="flex-1 overflow-y-auto md:pb-6 pb-14">
-          <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col md:flex-row md:items-center md:gap-12 text-center md:text-left px-5 pt-6 pb-4 md:pt-16">
-            {/* Left: logo + title + CTA */}
-            <div className="flex flex-col items-center md:items-start flex-1">
-              {/* Logo */}
-              <img src={LOGO} alt="King Food" className="w-20 h-20 md:w-32 md:h-32 object-contain mb-3 rounded-2xl" />
+          <div className="max-w-sm md:max-w-lg mx-auto flex flex-col items-center md:items-start text-center md:text-left px-5 pt-8 pb-8 md:pt-20">
+            <img src={LOGO} alt="King Food" className="w-20 h-20 md:w-28 md:h-28 object-contain mb-3 rounded-2xl" />
 
-              {/* Title */}
-              <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight uppercase md:normal-case">
-                King Food
-              </h1>
-              <p className="text-sm md:text-base text-[#FFD100]/90 font-semibold mb-1">
-                Açaí brasileiro · Columbus, OH
-              </p>
-              <p className="text-xs md:text-sm text-white/45 mb-3">
-                Brazilian açaí · Delivery in Columbus
-              </p>
+            <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">
+              King Food
+            </h1>
+            <p className="text-sm md:text-base text-[#FFD100]/90 font-semibold mb-2">
+              Açaí brasileiro · Columbus, OH
+            </p>
+            <p className="text-sm md:text-base text-white/65 leading-relaxed mb-6 max-w-md">
+              Sabor de verdade, do Brasil pra sua casa.
+            </p>
 
-              {/* Description */}
-              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-4 max-w-md">
-                Sabor de verdade, do Brasil pra sua casa. Peça pelo cardápio ou fale no WhatsApp.
-              </p>
+            <button
+              type="button"
+              onClick={openMenu}
+              ref={ctaPrimaryRef}
+              className="w-full md:w-auto md:min-w-[240px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-extrabold py-3.5 rounded-full text-base shadow-lg shadow-[#FFD100]/25 active:scale-[0.98] transition will-change-transform"
+            >
+              Pedir agora →
+            </button>
 
-              {/* Quick chips — location-style actions, KF skin */}
-              <div className="w-full md:w-auto flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-                {QUICK_CHIPS.map((chip) => {
-                  const base =
-                    "inline-flex items-center min-h-[36px] px-3.5 rounded-full text-xs font-bold border transition active:scale-95";
-                  if (chip.action === "menu") {
-                    return (
-                      <button
-                        key={chip.label}
-                        type="button"
-                        onClick={openMenu}
-                        className={`${base} bg-[#FFD100] text-black border-[#FFD100] shadow shadow-[#FFD100]/20`}
-                      >
-                        {chip.label}
-                      </button>
-                    );
-                  }
-                  if (chip.action === "hours") {
-                    return (
-                      <button
-                        key={chip.label}
-                        type="button"
-                        onClick={() => setTab("hours")}
-                        className={`${base} bg-white/5 text-white border-white/15 hover:bg-white/10`}
-                      >
-                        {chip.label}
-                      </button>
-                    );
-                  }
-                  return (
-                    <a
-                      key={chip.label}
-                      href={chip.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`${base} bg-white/5 text-white border-white/15 hover:bg-white/10`}
-                    >
-                      {chip.label}
-                    </a>
-                  );
-                })}
-              </div>
-
-              {/* Primary CTA */}
-              <button
-                type="button"
-                onClick={openMenu}
-                ref={ctaPrimaryRef}
-                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-extrabold py-3.5 rounded-full text-base shadow-lg shadow-[#FFD100]/25 active:scale-[0.98] transition will-change-transform"
-              >
-                Pedir agora →
-              </button>
-
-              {/* Secondary CTA */}
+            {/* Atalhos únicos — sem repetir CTA / WA flutuante / bottom nav */}
+            <div className="w-full mt-5 grid grid-cols-2 gap-2">
               <a
                 href={GROUP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 ref={ctaSecondaryRef}
-                className="w-full md:w-auto md:min-w-[220px] mt-2.5 border border-white/25 text-white font-bold py-3 rounded-full text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+                className="rounded-2xl border border-white/15 bg-white/5 px-3 py-3 text-sm font-bold text-white hover:bg-white/10 active:scale-[0.98] transition text-center"
               >
-                Entrar no grupo
+                Grupo WA
               </a>
-
-              {/* Install */}
-              {canInstall && (
-                <button
-                  type="button"
-                  onClick={() => setShowInstallModal(true)}
-                  className="mt-2 text-sm font-medium text-white/40 hover:text-white/70 py-1.5 transition"
-                >
-                  + Instalar app
-                </button>
-              )}
-            </div>
-
-            {/* Right: info cards (desktop only) */}
-            <div className="hidden md:flex flex-col gap-4 flex-1 mt-0">
-              {/* Google — link only, no invented rating numbers */}
               <a
                 href={MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition"
+                className="rounded-2xl border border-white/15 bg-white/5 px-3 py-3 text-sm font-bold text-white hover:bg-white/10 active:scale-[0.98] transition text-center"
               >
-                <div className="shrink-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
-                  <span className="text-lg font-bold text-[#4285F4]">G</span>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-white">Google Maps</p>
-                  <p className="text-sm text-[#FFD100]">Ver avaliações e rota →</p>
-                  <p className="text-xs text-white/40">Columbus, OH</p>
-                </div>
+                Maps · avaliações
               </a>
-
-              {/* Contact cards */}
-              <div className="grid grid-cols-2 gap-3">
-                <a
-                  href={WA_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
-                >
-                  <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
-                  <div>
-                    <p className="text-xs font-bold text-white">WhatsApp</p>
-                    <p className="text-[10px] text-white/40">Falar agora</p>
-                  </div>
-                </a>
-                <a
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
-                >
-                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad)" strokeWidth="2">
-                    <defs>
-                      <linearGradient id="ig-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#f09433" />
-                        <stop offset="50%" stopColor="#e6683c" />
-                        <stop offset="100%" stopColor="#dc2743" />
-                      </linearGradient>
-                    </defs>
-                    <rect x="2" y="2" width="20" height="20" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1" fill="url(#ig-grad)" stroke="none" />
-                  </svg>
-                  <div>
-                    <p className="text-xs font-bold text-white">Instagram</p>
-                    <p className="text-[10px] text-white/40">@king.food_delivery</p>
-                  </div>
-                </a>
-              </div>
-
-              {/* Hours summary */}
               <button
                 type="button"
                 onClick={() => setTab("hours")}
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 active:scale-[0.98] transition text-left"
+                className="rounded-2xl border border-white/15 bg-white/5 px-3 py-3 text-sm font-bold text-white hover:bg-white/10 active:scale-[0.98] transition"
               >
-                <span className="text-2xl" aria-hidden>🕐</span>
-                <div>
-                  <p className="text-sm font-bold text-white">Horários e entrega</p>
-                  <p className="text-xs text-white/40">Em até 40 min • Columbus, OH</p>
-                </div>
+                Horários
               </button>
-            </div>
-          </div>
-
-          {/* Mobile-only info cards (below CTAs) */}
-          <div className="md:hidden">
-            {/* Google — no invented rating */}
-            <div className="w-full mt-5 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-2.5">Onde estamos</h2>
               <a
-                href={MAPS_URL}
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 active:scale-[0.98] transition"
+                className="rounded-2xl border border-white/15 bg-white/5 px-3 py-3 text-sm font-bold text-white hover:bg-white/10 active:scale-[0.98] transition text-center"
               >
-                <div className="shrink-0 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center">
-                  <span className="text-base font-bold text-[#4285F4]">G</span>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-white">Google Maps</p>
-                  <p className="text-sm text-[#FFD100]">Ver avaliações e rota →</p>
-                  <p className="text-xs text-white/40">Columbus, OH</p>
-                </div>
+                Instagram
               </a>
             </div>
 
-            {/* Hours shortcut mobile */}
-            <div className="w-full mt-3 text-left px-5">
+            {canInstall && (
               <button
                 type="button"
-                onClick={() => setTab("hours")}
-                className="w-full flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 active:scale-[0.98] transition text-left"
+                onClick={() => setShowInstallModal(true)}
+                className="mt-4 text-sm font-medium text-white/40 hover:text-white/70 py-1.5 transition"
               >
-                <span className="text-xl" aria-hidden>🕐</span>
-                <div>
-                  <p className="text-sm font-bold text-white">Horários e entrega</p>
-                  <p className="text-xs text-white/40">Em até 40 min · Columbus, OH</p>
-                </div>
+                + Instalar app
               </button>
-            </div>
-
-            {/* Contact links */}
-            <div className="w-full mt-4 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-2.5">Contato</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <a
-                  href={WA_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
-                >
-                  <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
-                  <div>
-                    <p className="text-xs font-bold text-white">WhatsApp</p>
-                    <p className="text-[10px] text-white/40">Falar agora</p>
-                  </div>
-                </a>
-                <a
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 hover:bg-white/10 active:scale-[0.97] transition"
-                >
-                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="url(#ig-grad-m)" strokeWidth="2">
-                    <defs>
-                      <linearGradient id="ig-grad-m" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#f09433" />
-                        <stop offset="50%" stopColor="#e6683c" />
-                        <stop offset="100%" stopColor="#dc2743" />
-                      </linearGradient>
-                    </defs>
-                    <rect x="2" y="2" width="20" height="20" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1" fill="url(#ig-grad-m)" stroke="none" />
-                  </svg>
-                  <div>
-                    <p className="text-xs font-bold text-white">Instagram</p>
-                    <p className="text-[10px] text-white/40">@king.food_delivery</p>
-                  </div>
-                </a>
-              </div>
-            </div>
+            )}
           </div>
         </main>
       )}
