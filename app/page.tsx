@@ -7,6 +7,9 @@ const WA_URL = "https://wa.me/12673107535";
 const GROUP_URL = "https://chat.whatsapp.com/LtoVNE9AJ2u2nlrlruTxhd";
 const MAPS_URL = "https://maps.app.goo.gl/GR2gpipSMqZdH9Xy5";
 const INSTAGRAM_URL = "https://instagram.com/king.food_delivery";
+/** Post oficial do sorteio no Instagram */
+const SORTEIO_IG_POST_URL =
+  "https://www.instagram.com/p/DbjecIfC6kS/?igsh=MWF2dnZzZ3RudmF6Yw==";
 const LOGO = "/logo-kingfood.png.png";
 const INSTALL_DISMISS_KEY = "kf_install_dismissed";
 
@@ -374,15 +377,15 @@ export default function Home() {
         background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.15) 100%), url('/bg-acai.jpg') center/cover no-repeat`,
       }}
     >
-      {/* Promo bar — idea from franchise UX; KF copy/colors only */}
+      {/* Promo bar — sorteio Instagram (post oficial) */}
       {tab === "home" && (
         <a
-          href={GROUP_URL}
+          href={SORTEIO_IG_POST_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="shrink-0 z-40 block bg-[#FFD100] text-black text-center text-[11px] sm:text-xs font-extrabold tracking-wide uppercase px-3 py-2.5 hover:bg-[#ffe14a] active:scale-[0.99] transition"
         >
-          Grupo WhatsApp · novidades e cupons · entrar →
+          Sorteio no Instagram · comenta AÇAÍ e participa →
         </a>
       )}
 
