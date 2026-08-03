@@ -24,6 +24,19 @@ const SIDE_LINKS: {
   { label: "Fale conosco", icon: "📱", href: WA_URL },
 ];
 
+/** Quick actions inspired by franchise location UX — KF identity, not beach palette */
+const QUICK_CHIPS: {
+  label: string;
+  action?: "menu" | "hours";
+  href?: string;
+}[] = [
+  { label: "Cardápio", action: "menu" },
+  { label: "Grupo", href: GROUP_URL },
+  { label: "WhatsApp", href: WA_URL },
+  { label: "Mapas", href: MAPS_URL },
+  { label: "Horários", action: "hours" },
+];
+
 const HOURS = [
   { day: 0, label: "Domingo", hours: "6:00 PM – 10:30 PM" },
   { day: 1, label: "Segunda-feira", hours: "7:00 PM – 10:00 PM" },
@@ -361,6 +374,18 @@ export default function Home() {
         background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.15) 100%), url('/bg-acai.jpg') center/cover no-repeat`,
       }}
     >
+      {/* Promo bar — idea from franchise UX; KF copy/colors only */}
+      {tab === "home" && (
+        <a
+          href={GROUP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 z-40 block bg-[#FFD100] text-black text-center text-[11px] sm:text-xs font-extrabold tracking-wide uppercase px-3 py-2.5 hover:bg-[#ffe14a] active:scale-[0.99] transition"
+        >
+          Grupo WhatsApp · novidades e cupons · entrar →
+        </a>
+      )}
+
       {/* Header */}
       <header className={`shrink-0 z-40 text-white border-b transition-all duration-300 ${scrolled || tab !== "home" ? "bg-black/60 backdrop-blur-md border-white/10" : "bg-transparent border-transparent"}`}>
         <div className="flex items-center justify-between px-4 py-2 max-w-5xl mx-auto w-full">
@@ -392,18 +417,36 @@ export default function Home() {
             <button type="button" onClick={() => setTab("hours")} className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${tab === "hours" ? "text-[#FFD100]" : "text-white/60 hover:text-white hover:bg-white/10"}`}>Horários</button>
             <a href={GROUP_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Grupo</a>
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg text-sm font-semibold text-white/60 hover:text-white hover:bg-white/10 transition">Instagram</a>
+            <button
+              type="button"
+              onClick={openMenu}
+              className="ml-1 px-4 py-2 rounded-full text-sm font-extrabold bg-[#FFD100] text-black hover:bg-[#ffe14a] shadow-lg shadow-[#FFD100]/20 transition active:scale-95"
+            >
+              Pedir agora
+            </button>
             <a href={WA_URL} target="_blank" rel="noopener noreferrer" className="ml-1 px-4 py-2 rounded-lg text-sm font-bold bg-[#25D366] text-white hover:bg-[#25D366]/90 transition">WhatsApp</a>
           </nav>
 
-          {tab !== "home" && (
-            <button
-              type="button"
-              onClick={goHome}
-              className="md:hidden text-xs font-semibold text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/10 active:scale-95 transition"
-            >
-              ← Início
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {tab === "home" && (
+              <button
+                type="button"
+                onClick={openMenu}
+                className="md:hidden text-xs font-extrabold text-black bg-[#FFD100] px-3 py-1.5 rounded-full shadow shadow-[#FFD100]/25 active:scale-95 transition"
+              >
+                Pedir
+              </button>
+            )}
+            {tab !== "home" && (
+              <button
+                type="button"
+                onClick={goHome}
+                className="md:hidden text-xs font-semibold text-white/70 px-3 py-1.5 rounded-lg hover:bg-white/10 active:scale-95 transition"
+              >
+                ← Início
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -532,22 +575,72 @@ export default function Home() {
               <img src={LOGO} alt="King Food" className="w-20 h-20 md:w-32 md:h-32 object-contain mb-3 rounded-2xl" />
 
               {/* Title */}
-              <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">King Food</h1>
-              <p className="text-sm md:text-base text-white/50 mb-3">Açaí Premium • Columbus, OH</p>
+              <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-1 tracking-tight uppercase md:normal-case">
+                King Food
+              </h1>
+              <p className="text-sm md:text-base text-[#FFD100]/90 font-semibold mb-1">
+                Açaí brasileiro · Columbus, OH
+              </p>
+              <p className="text-xs md:text-sm text-white/45 mb-3">
+                Brazilian açaí · Delivery in Columbus
+              </p>
 
               {/* Description */}
-              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-5 max-w-md">
-                Açaí brasileiro feito com ingredientes premium. Delivery em Columbus.
+              <p className="text-sm md:text-base text-white/70 leading-relaxed mb-4 max-w-md">
+                Sabor de verdade, do Brasil pra sua casa. Peça pelo cardápio ou fale no WhatsApp.
               </p>
+
+              {/* Quick chips — location-style actions, KF skin */}
+              <div className="w-full md:w-auto flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                {QUICK_CHIPS.map((chip) => {
+                  const base =
+                    "inline-flex items-center min-h-[36px] px-3.5 rounded-full text-xs font-bold border transition active:scale-95";
+                  if (chip.action === "menu") {
+                    return (
+                      <button
+                        key={chip.label}
+                        type="button"
+                        onClick={openMenu}
+                        className={`${base} bg-[#FFD100] text-black border-[#FFD100] shadow shadow-[#FFD100]/20`}
+                      >
+                        {chip.label}
+                      </button>
+                    );
+                  }
+                  if (chip.action === "hours") {
+                    return (
+                      <button
+                        key={chip.label}
+                        type="button"
+                        onClick={() => setTab("hours")}
+                        className={`${base} bg-white/5 text-white border-white/15 hover:bg-white/10`}
+                      >
+                        {chip.label}
+                      </button>
+                    );
+                  }
+                  return (
+                    <a
+                      key={chip.label}
+                      href={chip.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${base} bg-white/5 text-white border-white/15 hover:bg-white/10`}
+                    >
+                      {chip.label}
+                    </a>
+                  );
+                })}
+              </div>
 
               {/* Primary CTA */}
               <button
                 type="button"
                 onClick={openMenu}
                 ref={ctaPrimaryRef}
-                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-bold py-3.5 rounded-2xl text-base shadow-lg shadow-[#FFD100]/20 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] bg-[#FFD100] hover:bg-[#FFD100]/90 text-black font-extrabold py-3.5 rounded-full text-base shadow-lg shadow-[#FFD100]/25 active:scale-[0.98] transition will-change-transform"
               >
-                Ver cardápio →
+                Pedir agora →
               </button>
 
               {/* Secondary CTA */}
@@ -556,7 +649,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 ref={ctaSecondaryRef}
-                className="w-full md:w-auto md:min-w-[220px] mt-2.5 border border-white/20 text-white font-bold py-3 rounded-2xl text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
+                className="w-full md:w-auto md:min-w-[220px] mt-2.5 border border-white/25 text-white font-bold py-3 rounded-full text-base text-center hover:bg-white/5 active:scale-[0.98] transition will-change-transform"
               >
                 Entrar no grupo
               </a>
@@ -575,7 +668,7 @@ export default function Home() {
 
             {/* Right: info cards (desktop only) */}
             <div className="hidden md:flex flex-col gap-4 flex-1 mt-0">
-              {/* Google rating */}
+              {/* Google — link only, no invented rating numbers */}
               <a
                 href={MAPS_URL}
                 target="_blank"
@@ -586,9 +679,9 @@ export default function Home() {
                   <span className="text-lg font-bold text-[#4285F4]">G</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Google</p>
-                  <p className="text-sm text-[#FFD100]">★★★★★ 5.0</p>
-                  <p className="text-xs text-white/40">Ver no Google Maps</p>
+                  <p className="text-sm font-bold text-white">Google Maps</p>
+                  <p className="text-sm text-[#FFD100]">Ver avaliações e rota →</p>
+                  <p className="text-xs text-white/40">Columbus, OH</p>
                 </div>
               </a>
 
@@ -648,9 +741,9 @@ export default function Home() {
 
           {/* Mobile-only info cards (below CTAs) */}
           <div className="md:hidden">
-            {/* Google rating */}
+            {/* Google — no invented rating */}
             <div className="w-full mt-5 text-left px-5">
-              <h2 className="text-sm font-extrabold text-white mb-2.5">Avaliações</h2>
+              <h2 className="text-sm font-extrabold text-white mb-2.5">Onde estamos</h2>
               <a
                 href={MAPS_URL}
                 target="_blank"
@@ -661,11 +754,26 @@ export default function Home() {
                   <span className="text-base font-bold text-[#4285F4]">G</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Google</p>
-                  <p className="text-sm text-[#FFD100]">★★★★★ 5.0</p>
-                  <p className="text-xs text-white/40">Ver no Google Maps</p>
+                  <p className="text-sm font-bold text-white">Google Maps</p>
+                  <p className="text-sm text-[#FFD100]">Ver avaliações e rota →</p>
+                  <p className="text-xs text-white/40">Columbus, OH</p>
                 </div>
               </a>
+            </div>
+
+            {/* Hours shortcut mobile */}
+            <div className="w-full mt-3 text-left px-5">
+              <button
+                type="button"
+                onClick={() => setTab("hours")}
+                className="w-full flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 hover:bg-white/10 active:scale-[0.98] transition text-left"
+              >
+                <span className="text-xl" aria-hidden>🕐</span>
+                <div>
+                  <p className="text-sm font-bold text-white">Horários e entrega</p>
+                  <p className="text-xs text-white/40">Em até 40 min · Columbus, OH</p>
+                </div>
+              </button>
             </div>
 
             {/* Contact links */}
